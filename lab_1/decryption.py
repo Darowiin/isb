@@ -94,7 +94,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--output_file",
         type=str,
-        default="lab_1/task_2/decrypted_text",
+        default="lab_1/task_2/decrypted_text.txt",
         help="Path to the output file where the encrypted text will be saved."
     )
 

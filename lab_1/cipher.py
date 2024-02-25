@@ -56,7 +56,7 @@ if __name__ == "__main__":
         "--step",
         type=int,
         default=4,
-        help="The step (shift) to be used in the Caesar cipher. Default is 1."
+        help="The step (shift) to be used in the Caesar cipher. Default is 4."
     )
 
     args = parser.parse_args()

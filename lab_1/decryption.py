@@ -1,6 +1,7 @@
+import argparse
 import json
 import logging
-from read_write import read_file,write_to_file
+from read_write import read_file, write_to_file
 
 
 logging.basicConfig(level=logging.INFO)
@@ -67,5 +68,41 @@ def decrypt_text(encrypted_text: str, key_path: str, decrypted_text: str) -> Non
         logging.error(f"Error during text decryption: {ex}\n")
 
 
-get_dict("lab_1/task_2/cod1.txt","lab_1/task_2/freq.json")
-decrypt_text("lab_1/task_2/cod1.txt","lab_1/task_2/key.json","lab_1/task_2/decrypted_text.txt")
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Decryption of text encrypted with monoalphabetic substitution")
+    parser.add_argument(
+        "--input_file",
+        type=str,
+        default="lab_1/task_2/cod1.txt",
+        help="Path to the input file containing the text to be encrypted."
+    )
+
+    parser.add_argument(
+        "--freq_dict",
+        type=str,
+        default="lab_1/task_2/freq.json",
+        help="Path to the file where the frequency dictionary will be saved."
+    )
+    
+    parser.add_argument(
+        "--key_dict",
+        type=str,
+        default="lab_1/task_2/key.json",
+        help="Path to the file that contains the key dictionary."
+    )
+    
+    parser.add_argument(
+        "--output_file",
+        type=str,
+        default="lab_1/task_2/decrypted_text",
+        help="Path to the output file where the encrypted text will be saved."
+    )
+
+    args = parser.parse_args()
+
+    try:
+        get_dict(args.input_file,args.freq_dict)
+        decrypt_text(args.input_file,args.key_dict,args.output_file)
+        logging.info(f"Text successfully decrypted and saved to {args.output_file}")
+    except Exception as ex:
+        logging.error(f"Error during decryption: {ex}")

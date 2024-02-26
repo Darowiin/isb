@@ -1,12 +1,15 @@
 import argparse
 import logging
-from read_write import read_file,write_to_file
+import os
+
+from read_write import read_file, write_to_file
 
 
 logging.basicConfig(level=logging.INFO)
 
 
 ALPHABET_RU = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя"
+ALPHABET_SYMBOLS = " ,.-;()?!+"
 
 
 def encryption_text(path: str, encryption_path: str, step: int) -> None:
@@ -23,13 +26,7 @@ def encryption_text(path: str, encryption_path: str, step: int) -> None:
     """
     try:
         data = read_file(path)
-        result = ""
-        for i in data:
-            if i == " ":
-                result += " "
-                continue
-            new_idx = (ALPHABET_RU.find(i) + step) % len(ALPHABET_RU)
-            result += ALPHABET_RU[new_idx]
+        result = "".join(char if char in ALPHABET_SYMBOLS else ALPHABET_RU[(ALPHABET_RU.find(char) + step) % len(ALPHABET_RU)] for char in data)
 
         write_to_file(encryption_path, result)
     except Exception as ex:
@@ -41,14 +38,14 @@ if __name__ == "__main__":
     parser.add_argument(
         "--input_file",
         type=str,
-        default="lab_1/task_1/original_text.txt",
+        default=os.path.join("lab_1","task_1","original_text.txt"),
         help="Path to the input file containing the text to be encrypted."
     )
 
     parser.add_argument(
         "--output_file",
         type=str,
-        default="lab_1/task_1/encryption_text.txt",
+        default=os.path.join("lab_1","task_1","encrypted_text.txt"),
         help="Path to the output file where the encrypted text will be saved."
     )
 

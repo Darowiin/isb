@@ -1,6 +1,8 @@
 import argparse
 import json
 import logging
+import os
+
 from read_write import read_file, write_to_file
 
 
@@ -24,10 +26,7 @@ def get_dict(path: str, new_path: str) -> None:
         my_dict = {}
         
         for char in data:
-            if char in my_dict:
-                my_dict[char] += 1
-            else:
-                my_dict[char] = 1
+            my_dict[char] = my_dict.get(char, 0) + 1
         
         total_chars = len(data)
         relative_freq_dict = {char: count / total_chars for char, count in my_dict.items()}
@@ -73,28 +72,28 @@ if __name__ == "__main__":
     parser.add_argument(
         "--input_file",
         type=str,
-        default="lab_1/task_2/cod1.txt",
+        default=os.path.join("lab_1","task_2","cod1.txt"),
         help="Path to the input file containing the text to be encrypted."
     )
 
     parser.add_argument(
         "--freq_dict",
         type=str,
-        default="lab_1/task_2/freq.json",
+        default=os.path.join("lab_1","task_2","freq.json"),
         help="Path to the file where the frequency dictionary will be saved."
     )
     
     parser.add_argument(
         "--key_dict",
         type=str,
-        default="lab_1/task_2/key.json",
+        default=os.path.join("lab_1","task_2","key.json"),
         help="Path to the file that contains the key dictionary."
     )
     
     parser.add_argument(
         "--output_file",
         type=str,
-        default="lab_1/task_2/decrypted_text.txt",
+        default=os.path.join("lab_1","task_2","decrypted_text.txt"),
         help="Path to the output file where the encrypted text will be saved."
     )
 

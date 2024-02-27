@@ -9,13 +9,42 @@ logging.basicConfig(level=logging.INFO)
 pi = {0: 0.2148, 1: 0.3672, 2: 0.2305, 3: 0.1875}
 
 class NistTest:
-    
+    """
+    NIST Statistical Test Suite implementation for binary sequences.
+
+    Attributes:
+        sequence (str): The binary sequence on which the tests are performed.
+        seq_length (int): The length of the binary sequence.
+        MAX_LENGTH_BLOCK (int): The maximum length of a block for the longest sequence of units in a block test (default is 8).
+
+    Methods:
+        bitwise_frequency_test() -> float:
+            Perform the Bitwise Frequency Test and return the p-value.
+
+        consecutive_bits_test() -> float:
+            Perform the Consecutive Bits Test and return the p-value.
+
+        longest_sequence_units_test() -> float:
+            Perform the Longest Run of Ones in a Block Test and return the p-value.
+    """
     def __init__(self, sequence: str) -> None:
+        """
+        Initialize the NistTest object with the provided binary sequence.
+
+        Args:
+            sequence (str): The binary sequence to be tested.
+        """
         self.sequence = sequence
         self.seq_length = len(sequence)
         self.MAX_LENGTH_BLOCK = 8
         
     def bitwise_frequency_test(self) -> float:
+        """
+        Perform the Bitwise Frequency Test and return the p-value.
+
+        Returns:
+            float: The p-value of the test.
+        """
         try:
             list = [1 if int(bit) == 1 else -1 for bit in self.sequence]
             sum_list = sum(list)
@@ -28,6 +57,12 @@ class NistTest:
             logging.error(f"Division by zero: {ex.message}\n{ex.args}\n")
 
     def consecutive_bits_test(self) -> float:
+        """
+        Perform the Consecutive Bits Test and return the p-value.
+
+        Returns:
+            float: The p-value of the test.
+        """
         try:
             sum_list = self.sequence.count("1") / self.seq_length
             if abs(sum_list - 0.5) > (2/math.sqrt(self.seq_length)):
@@ -42,6 +77,12 @@ class NistTest:
             logging.error(f"Division by zero: {ex.message}\n{ex.args}\n")
             
     def longest_sequence_units_test(self) -> float:
+        """
+        Perform the Longest Run of Ones in a Block Test and return the p-value.
+
+        Returns:
+            float: The p-value of the test.
+        """
         try:
             block_max_len = {}
             for step in range(0, self.seq_length, self.MAX_LENGTH_BLOCK):

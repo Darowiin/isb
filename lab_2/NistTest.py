@@ -1,3 +1,4 @@
+import os
 import json
 import logging
 import math
@@ -105,3 +106,20 @@ class NistTest:
             return mpmath.gammainc(3 / 2,  xi_square / 2)
         except Exception as ex:
             logging.error(f"Error occurred during the test execution: {ex.message}\n{ex.args}\n")
+
+
+if __name__ == "__main__":
+    with open(os.path.join("lab_2", "sequence.json"), "r") as json_sequences:
+        sequences = json.load(json_sequences)
+        
+    test_cpp = NistTest(sequences["c++_sequence"])
+
+    logging.info("Bitwise Frequency Test Result for C++: %s", NistTest.bitwise_frequency_test(test_cpp))
+    logging.info("Consecutive Bits Test Result for C++: %s", NistTest.consecutive_bits_test(test_cpp))
+    logging.info("Longest Sequence Units Test Result for C++: %s", NistTest.longest_sequence_units_test(test_cpp))
+    
+    test_java = NistTest(sequences["java_sequence"])
+    
+    logging.info("Bitwise Frequency Test Result for Java: %s", NistTest.bitwise_frequency_test(test_java))
+    logging.info("Consecutive Bits Test Result for Java: %s", NistTest.consecutive_bits_test(test_java))
+    logging.info("Longest Sequence Units Test Result for Java: %s", NistTest.longest_sequence_units_test(test_java))

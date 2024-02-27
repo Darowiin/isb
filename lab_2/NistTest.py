@@ -2,15 +2,18 @@ import json
 import logging
 import math
 
+import mpmath
 
 logging.basicConfig(level=logging.INFO)
 
+pi = {0: 0.2148, 1: 0.3672, 2: 0.2305, 3: 0.1875}
 
 class NistTest:
     
     def __init__(self, sequence: str) -> None:
         self.sequence = sequence
         self.seq_length = len(sequence)
+        self.MAX_LENGTH_BLOCK = 8
         
     def bitwise_frequency_test(self) -> float:
         try:
@@ -37,3 +40,27 @@ class NistTest:
             return p_value
         except ZeroDivisionError as ex:
             logging.error(f"Division by zero: {ex.message}\n{ex.args}\n")
+            
+    def longest_sequence_units_test(self) -> float:
+        try:
+            block_max_len = {}
+            for step in range(0, self.seq_length, self.MAX_LENGTH_BLOCK):
+                block = self.sequence[step:step + self.MAX_LENGTH_BLOCK]
+                max_length = length = 0
+                for bit in block:
+                    length = length + 1 if bit == "1" else 0
+                    max_length = max(max_length, length)
+                block_max_len[max_length] = block_max_len.get(max_length, 0) + 1
+
+            v_n = {1: 0, 2: 0, 3: 0, 4: 0}
+            for i in block_max_len:
+                key = min(i, 4)
+                v_n[key] += block_max_len[i]
+
+            xi_square = 0
+            for i in range(4):
+                xi_square += math.pow(v_n[i + 1] - 16 * pi[i], 2) / (16 * pi[i])
+                
+            return mpmath.gammainc(3 / 2,  xi_square / 2)
+        except Exception as ex:
+            logging.error(f"Error occurred during the test execution: {ex.message}\n{ex.args}\n")

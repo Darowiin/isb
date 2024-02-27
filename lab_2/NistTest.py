@@ -23,3 +23,17 @@ class NistTest:
             return p_value
         except ZeroDivisionError as ex:
             logging.error(f"Division by zero: {ex.message}\n{ex.args}\n")
+
+    def consecutive_bits_test(self) -> float:
+        try:
+            sum_list = self.sequence.count("1") / self.seq_length
+            if abs(sum_list - 0.5) > (2/math.sqrt(self.seq_length)):
+                return 0
+            
+            v_n = 0
+            v_n += sum(1 if self.sequence[i] != self.sequence[i+1] else 0 for i in range(self.seq_length-1))
+            
+            p_value = math.erfc(abs(v_n-2*self.seq_length*sum_list*(1-sum_list))/(2*math.sqrt(2*self.seq_length)*sum_list*(1-sum_list)))
+            return p_value
+        except ZeroDivisionError as ex:
+            logging.error(f"Division by zero: {ex.message}\n{ex.args}\n")

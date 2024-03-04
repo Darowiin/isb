@@ -1,9 +1,8 @@
-import os
-import json
 import logging
+import json
 import math
-
 import mpmath
+import os
 
 logging.basicConfig(level=logging.INFO)
 
@@ -56,6 +55,8 @@ class NistTest:
             return p_value
         except ZeroDivisionError as ex:
             logging.error(f"Division by zero: {ex.message}\n{ex.args}\n")
+        except Exception as ex:
+            logging.error(f"Error occurred during the test execution: {ex.message}\n{ex.args}\n")
 
     def consecutive_bits_test(self) -> float:
         """
@@ -76,6 +77,8 @@ class NistTest:
             return p_value
         except ZeroDivisionError as ex:
             logging.error(f"Division by zero: {ex.message}\n{ex.args}\n")
+        except Exception as ex:
+            logging.error(f"Error occurred during the test execution: {ex.message}\n{ex.args}\n")
             
     def longest_sequence_units_test(self) -> float:
         """
@@ -88,7 +91,7 @@ class NistTest:
             block_max_len = {}
             for step in range(0, self.seq_length, self.MAX_LENGTH_BLOCK):
                 block = self.sequence[step:step + self.MAX_LENGTH_BLOCK]
-                max_length = length = 0
+                max_length, length = 0, 0
                 for bit in block:
                     length = length + 1 if bit == "1" else 0
                     max_length = max(max_length, length)

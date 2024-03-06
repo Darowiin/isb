@@ -4,7 +4,7 @@ import math
 import mpmath
 import os
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.INFO,filename="lab_2/report.txt")
 
 pi = {0: 0.2148, 1: 0.3672, 2: 0.2305, 3: 0.1875}
 

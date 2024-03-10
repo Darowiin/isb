@@ -16,7 +16,7 @@ def key_generation(symmetric_key_path: str, key_len: int, public_path: str, priv
         
         asymmetric_keys = rsa.generate_private_key(
             public_exponent=65537,
-            key_size=2048
+            key_size=4196
         )
         private_key = asymmetric_keys
         public_key = asymmetric_keys.public_key()
@@ -58,7 +58,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--len",
         type=int,
-        default=192,
+        default=256,
         help="Encryption key length."
     )
     parser.add_argument(

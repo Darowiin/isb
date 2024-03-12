@@ -12,7 +12,15 @@ logging.basicConfig(level=logging.INFO,filemode="w",filename="lab_3/py_log_2.log
 
 
 def text_decryption(encrypted_text_path: str, private_key_path: str, symmetric_key_path: str, decrypted_text_path: str) -> None:
-    logging.info("Starting the text encryption.")
+    """
+    Decrypt text using asymmetric and symmetric keys and save the result to a file.
+
+    :param encrypted_text_path: Path to the encrypted file containing the text to be decrypted.
+    :param private_key_path: Path to the asymmetric private encryption key.
+    :param symmetric_key_path: Path to the symmetric encrypted key.
+    :param decrypted_text_path: Path to the new decrypted text.
+    """
+    logging.info("Starting the text decryption.")
     try:
         with open(private_key_path, 'rb') as pem_in:
             private_bytes = pem_in.read()
@@ -47,7 +55,6 @@ def text_decryption(encrypted_text_path: str, private_key_path: str, symmetric_k
         logging.error(f"An error occurred while decrypting and writing text to a file: {ex}.",exc_info=True)
     
         
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Applications for decrypting text using the symmetric AES method.")
     

@@ -12,6 +12,14 @@ logging.basicConfig(level=logging.INFO,filemode="w",filename="lab_3/py_log.log")
 
 
 def text_encryption(text_path: str, private_key_path: str, symmetric_key_path: str, encryption_text_path: str) -> None:
+    """
+    Encrypt text using asymmetric and symmetric keys and save the result to a file.
+
+    :param text_path: Path to the input file containing the text to be encrypted.
+    :param private_key_path: Path to the asymmetric private encryption key.
+    :param symmetric_key_path: Path to the symmetric encrypted key.
+    :param encryption_text_path: Path to the new encrypted text.
+    """
     logging.info("Starting the text encryption.")
     try:
         with open(private_key_path, 'rb') as pem_in:

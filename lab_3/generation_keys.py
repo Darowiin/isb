@@ -11,6 +11,15 @@ logging.basicConfig(level=logging.INFO)
 
 
 def key_generation(symmetric_key_path: str, key_len: int, public_path: str, private_path: str) -> None:
+    """
+    Generate symmetric and asymmetric keys and save them to files.
+
+    :param symmetric_key_path: Path to save the symmetric key.
+    :param key_len: Length of the encryption key.
+    :param public_path: Path to save the public key.
+    :param private_path: Path to save the private key.
+    """
+    logging.info("Starting key generation.")
     try:
         symmetric_key = os.urandom(int(key_len/8))
         

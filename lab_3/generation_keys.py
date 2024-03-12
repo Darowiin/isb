@@ -12,11 +12,11 @@ logging.basicConfig(level=logging.INFO)
 
 def key_generation(symmetric_key_path: str, key_len: int, public_path: str, private_path: str) -> None:
     try:
-        symmetric_key = os.urandom(key_len)
+        symmetric_key = os.urandom(int(key_len/8))
         
         asymmetric_keys = rsa.generate_private_key(
             public_exponent=65537,
-            key_size=4196
+            key_size=2048
         )
         private_key = asymmetric_keys
         public_key = asymmetric_keys.public_key()

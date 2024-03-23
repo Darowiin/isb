@@ -1,5 +1,0 @@
-INFO:root:Starting the text encryption.
-INFO:root:The private key has been successfully serialized.
-INFO:root:Symmetric key successfully decrypted.
-INFO:root:The text was successfully padded.
-INFO:root:The text was successfully encrypted and written to a file.

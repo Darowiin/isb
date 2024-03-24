@@ -129,7 +129,8 @@ class HybridEncryption:
         :param encrypted_text: Encrypted text.
         :return: Decrypted text.
         """
-        iv = os.urandom(16)
+        iv = encrypted_text[: 16]
+        encrypted_text = encrypted_text[16 :]
         cipher = Cipher(algorithms.AES(symmetric_key), modes.CBC(iv))
         decryptor = cipher.decryptor()
         decrypted_text = decryptor.update(encrypted_text) + decryptor.finalize()

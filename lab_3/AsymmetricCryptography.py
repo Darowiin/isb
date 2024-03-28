@@ -12,8 +12,18 @@ class AsymmetricCryptography:
     Attributes:
         None
     """
-    @staticmethod
-    def generate_key_pair(key_size: int) -> tuple:
+    def __init__(self, private_key_path: str, public_key_path: str) -> None:
+        """
+        Initialize AsymmetricCryptography object with public and private key paths.
+
+        :param private_key_path: Path to the private key file.
+        :param public_key_path: Path to the public key file.
+        """
+        self.private_key_path = private_key_path
+        self.public_key_path = public_key_path
+        
+        
+    def generate_key_pair(self, key_size: int) -> tuple:
         """
         Generate an RSA key pair.
 
@@ -25,57 +35,51 @@ class AsymmetricCryptography:
         public_key = private_key.public_key()
         return private_key, public_key
 
-    @staticmethod
-    def serialize_private_key(private_key: rsa.RSAPrivateKey, path: str) -> None:
+
+    def serialize_private_key(self, private_key: rsa.RSAPrivateKey) -> None:
         """
         Serialize the private key and save it to a file.
 
         :param private_key: The private key.
-        :param path: The path to save the serialized private key.
         """
-        with open(path, 'wb') as key_file:
+        with open(self.private_key_path, 'wb') as key_file:
             key_file.write(private_key.private_bytes(encoding=serialization.Encoding.PEM,
                                                      format=serialization.PrivateFormat.TraditionalOpenSSL,
                                                      encryption_algorithm=serialization.NoEncryption()))
 
-    @staticmethod
-    def serialize_public_key(public_key: rsa.RSAPublicKey, path: str) -> None:
+
+    def serialize_public_key(self, public_key: rsa.RSAPublicKey) -> None:
         """
         Serialize the public key and save it to a file.
 
         :param public_key: The public key.
-        :param path: The path to save the serialized public key.
         """
-        with open(path, 'wb') as key_file:
+        with open(self.public_key_path, 'wb') as key_file:
             key_file.write(public_key.public_bytes(encoding=serialization.Encoding.PEM,
                                                     format=serialization.PublicFormat.SubjectPublicKeyInfo))
 
-    @staticmethod
-    def deserialize_private_key(path: str) -> rsa.RSAPrivateKey:
+
+    def deserialize_private_key(self) -> rsa.RSAPrivateKey:
         """
         Deserialize the private key and return it.
-
-        :param path: The path that contains the serialized private key.
         
         :return: The deserialized private key.
         """
-        with open(path, 'rb') as key_file:
+        with open(self.private_key_path, 'rb') as key_file:
             return serialization.load_pem_private_key(key_file.read(), password=None)
 
-    @staticmethod
-    def deserialize_public_key(path: str) -> rsa.RSAPublicKey:
+
+    def deserialize_public_key(self) -> rsa.RSAPublicKey:
         """
         Deserialize the public key and return it.
-
-        :param path: The path that contains the serialized public key.
         
         :return: The deserialized public key.
         """
-        with open(path, 'rb') as key_file:
+        with open(self.public_key_path, 'rb') as key_file:
             return serialization.load_pem_public_key(key_file.read())
 
-    @staticmethod
-    def encrypt_with_public_key(public_key: rsa.RSAPublicKey, text: bytes) -> bytes:
+
+    def encrypt_with_public_key(self, public_key: rsa.RSAPublicKey, text: bytes) -> bytes:
         """
         Encrypts ntext using the provided public key.
 
@@ -87,8 +91,8 @@ class AsymmetricCryptography:
         return public_key.encrypt(text, padding.OAEP(mgf=padding.MGF1(algorithm=hashes.SHA256()),
                                                           algorithm=hashes.SHA256(), label=None))
 
-    @staticmethod
-    def decrypt_with_private_key(private_key: rsa.RSAPrivateKey, ciphertext: bytes) -> bytes:
+
+    def decrypt_with_private_key(self, private_key: rsa.RSAPrivateKey, ciphertext: bytes) -> bytes:
         """
         Decrypts ciphertext using the provided private key.
 

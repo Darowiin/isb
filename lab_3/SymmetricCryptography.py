@@ -13,17 +13,25 @@ class SymmetricCryptography:
     Attributes:
         None
     """
-    @staticmethod
-    def generate_key(key_len: int) -> bytes:
+    def __init__(self, key_len: int) -> None:
+        """
+        Initialize SymmetricCryptography object with key length.
+
+        :param key_len: Length of the key.
+        """
+        self.key_len = key_len
+    
+    
+    def generate_key(self) -> bytes:
         """
         Generate and return symmetric key.
         
         :param key_len: Length of the key.
         """
-        return os.urandom(key_len//8)
+        return os.urandom(self.key_len//8)
 
-    @staticmethod
-    def encrypt_text(symmetric_key: bytes, text: bytes) -> bytes:
+
+    def encrypt_text(self, symmetric_key: bytes, text: bytes) -> bytes:
         """
         Encrypts the text using the provided symmetric key.
         
@@ -39,8 +47,8 @@ class SymmetricCryptography:
         padded_text = padder.update(text) + padder.finalize()
         return iv + encryptor.update(padded_text) + encryptor.finalize()
 
-    @staticmethod
-    def decrypt_text(symmetric_key: bytes, encrypted_text: bytes) -> bytes:
+
+    def decrypt_text(self, symmetric_key: bytes, encrypted_text: bytes) -> bytes:
         """
         Decrypts the text using the provided symmetric key.
         

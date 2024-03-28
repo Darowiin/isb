@@ -2,6 +2,8 @@ import argparse
 import os
 
 from HybridEncryption import HybridEncryption
+from SymmetricCryptography import SymmetricCryptography
+from AsymmetricCryptography import AsymmetricCryptography
 
 def main():
     parser = argparse.ArgumentParser(description="Single entry point for key generation, encryption, and decryption.")
@@ -52,10 +54,12 @@ def main():
                         help='Path to the decrypted text file (default: lab_3/decrypted_text.txt).')
 
     args = parser.parse_args()
-
-    hybrid_encryption = HybridEncryption(args.text_file,args.private_key,args.public_key,
+    symmetric_crypto = SymmetricCryptography(args.key_length)
+    asymmetric_crypto = AsymmetricCryptography(args.private_key,args.public_key)
+    hybrid_encryption = HybridEncryption(args.text_file,
                                         args.symmetric_key_file,args.encrypted_text_file,
-                                        args.decrypted_text_file,args.key_length)
+                                        args.decrypted_text_file,symmetric_crypto,asymmetric_crypto)
+    
     
     if args.generation:
         hybrid_encryption.generate_keys()

@@ -51,9 +51,37 @@ def find_card_data(bins: tuple, hash: str, last_numbers: str) -> str:
                     return (str(f'{result[0]}{result[1]}{result[2]}'))
     except Exception as ex:
         logging.error(f"The card data couldn't be found: {ex}\n")
+
+
+def luhn_alg(card_numbers: str) -> None:
+    """a function that checks the card number using the Luhn algorithm
+
+    Args:
+    card_numbers (int): Card number
+    """
+    try:
+        result = int(card_numbers[-1])
+        list_numbers = [int(card_numbers[::-1])]
+        for i, num in enumerate(list_numbers):
+            if i % 2 == 0:
+                mul = num*2
+                if mul > 9:
+                    mul -= 9
+                list_numbers[i] = mul
+        total_sum = sum(list_numbers)
+        rem = total_sum % 10
+        check_sum = 10 - rem if rem != 0 else 0
+        
+        if check_sum == result:
+            logging.info("The card data have passed the test for compliance with the Moon algorithm.")
+        else:
+            logging.info("The card data didn't pass the test for compliance with the Moon algorithm.")
+    except Exception as ex:
+        logging.error(f"An error occurred while executing the luhn algorithm: {ex}\n")
     
-            
+
 if __name__ == "__main__":
     with open(os.path.join("lab_4","settings.json"), "r") as settings_file:
         settings = json.load(settings_file)
     result = find_card_data(settings["bins"], settings["hash"], settings["last_numbers"])
+    check_alg = luhn_alg(result)

@@ -2,7 +2,11 @@ import hashlib
 import logging
 import json
 import os
+import time
 import multiprocessing as mp
+import matplotlib.pyplot as plt
+
+from tqdm import tqdm
 
 
 logging.basicConfig(level=logging.INFO)
@@ -61,7 +65,7 @@ def luhn_alg(card_numbers: str) -> None:
     """
     try:
         result = int(card_numbers[-1])
-        list_numbers = [int(card_numbers[::-1])]
+        list_numbers = [int(i) for i in (card_numbers[::-1])]
         for i, num in enumerate(list_numbers):
             if i % 2 == 0:
                 mul = num*2
@@ -73,15 +77,58 @@ def luhn_alg(card_numbers: str) -> None:
         check_sum = 10 - rem if rem != 0 else 0
         
         if check_sum == result:
-            logging.info("The card data have passed the test for compliance with the Moon algorithm.")
+            logging.info("The card data have passed the test for compliance with the Luhn algorithm.")
         else:
-            logging.info("The card data didn't pass the test for compliance with the Moon algorithm.")
+            logging.info("The card data didn't pass the test for compliance with the Luhn algorithm.")
     except Exception as ex:
         logging.error(f"An error occurred while executing the luhn algorithm: {ex}\n")
     
+
+def time_measurement(bins: tuple, hash: str, last_numbers: str) -> None:
+    """A function for measuring time and drawing a graph depending on the number of processes
+
+    Args:
+    bins (tuple): a tuple with the intended BIN
+    hash (str): hash value
+    last_num (str): the last 4 digits of the number
+    """
+    try:
+        args = []
+        for i in range(0, 1000000):
+            args.append((i, bins, hash, last_numbers))
+            
+        times_list = []
+        for i in tqdm(range(1, int(mp.cpu_count() * 1.5)), desc="Processes"):
+            start = time.time()
+            with mp.Pool(processes=i) as p:
+                for result in p.starmap(check_hash, args):
+                    if result:
+                        end = time.time() - start
+                        times_list.append(end)
+                        p.terminate()
+                        break
+        fig=plt.figure(figsize=(15, 5))
+        plt.plot(
+            range(len(times_list)),
+            times_list,
+            linestyle=":",
+            color="black",
+            marker="x",
+            markersize=10,
+        )
+        plt.bar(range(len(times_list)), times_list)
+        plt.xlabel("Процессы")
+        plt.ylabel("Время в секундах")
+        plt.title("График зависимости времени от числа процессов")
+        plt.show()
+    except Exception as ex:
+        logging.error(f"An error occurred when measuring time and drawing a graph: {ex}\n")
+
+
 
 if __name__ == "__main__":
     with open(os.path.join("lab_4","settings.json"), "r") as settings_file:
         settings = json.load(settings_file)
     result = find_card_data(settings["bins"], settings["hash"], settings["last_numbers"])
-    check_alg = luhn_alg(result)
+    luhn_alg(result)
+    time_measurement(settings["bins"], settings["hash"], settings["last_numbers"])

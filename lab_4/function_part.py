@@ -57,11 +57,14 @@ def find_card_data(bins: tuple, hash: str, last_numbers: str) -> str:
         logging.error(f"The card data couldn't be found: {ex}\n")
 
 
-def luhn_alg(card_numbers: str) -> None:
+def luhn_alg(card_numbers: str) -> bool:
     """a function that checks the card number using the Luhn algorithm
 
     Args:
     card_numbers (int): Card number
+    
+    Returns:
+    bool: boolean value of match/non-match
     """
     try:
         result = int(card_numbers[-1])
@@ -78,8 +81,10 @@ def luhn_alg(card_numbers: str) -> None:
         
         if check_sum == result:
             logging.info("The card data have passed the test for compliance with the Luhn algorithm.")
+            return True
         else:
             logging.info("The card data didn't pass the test for compliance with the Luhn algorithm.")
+            return False
     except Exception as ex:
         logging.error(f"An error occurred while executing the luhn algorithm: {ex}\n")
     

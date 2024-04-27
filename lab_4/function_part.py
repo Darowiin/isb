@@ -31,13 +31,14 @@ def check_hash(x: int, bins: tuple, hash: str, last_numbers: str) -> tuple:
     return None
 
 
-def find_card_data(bins: tuple, hash: str, last_numbers: str) -> str:
+def find_card_data(bins: tuple, hash: str, last_numbers: str, data_path: str) -> str:
     """bank card data search function
 
     Args:
     bins (tuple): a tuple with the intended BIN
     hash (str): hash value
     last_num (str): the last 4 digits of the number
+    data_path (str): the path to card data
 
     Returns:
     str: card number in the form of a string.
@@ -52,7 +53,12 @@ def find_card_data(bins: tuple, hash: str, last_numbers: str) -> str:
                 if result:
                     logging.info(f'Number of card: {result[0]}-{result[1]}-{result[2]}')
                     p.terminate()
-                    return (str(f'{result[0]}{result[1]}{result[2]}'))
+                    try:
+                        with open(data_path, "w") as file:
+                            json.dump({"card_number": str(f'{result[0]}{result[1]}{result[2]}')}, file)
+                            return str(f'{result[0]}{result[1]}{result[2]}')
+                    except Exception as ex:
+                        logging.error(f"Failed to save dictionary: {ex}\n")
     except Exception as ex:
         logging.error(f"The card data couldn't be found: {ex}\n")
 
@@ -132,8 +138,12 @@ def time_measurement(bins: tuple, hash: str, last_numbers: str) -> None:
 
 
 if __name__ == "__main__":
-    with open(os.path.join("lab_4","settings.json"), "r") as settings_file:
-        settings = json.load(settings_file)
-    result = find_card_data(settings["bins"], settings["hash"], settings["last_numbers"])
+    try:
+        with open(os.path.join("lab_4","settings.json"), "r") as settings_file:
+            settings = json.load(settings_file)
+    except Exception as ex:
+        logging.error(f"Can't open settings file: {ex}")
+    
+    result = find_card_data(settings["bins"], settings["hash"], settings["last_numbers"], settings["data_path"])
     luhn_alg(result)
     time_measurement(settings["bins"], settings["hash"], settings["last_numbers"])

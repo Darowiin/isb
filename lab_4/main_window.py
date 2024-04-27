@@ -4,11 +4,12 @@ from PyQt6.QtWidgets import (
     QApplication,
     QLabel,
     QLineEdit,
-    QMainWindow, 
+    QMainWindow,
+    QMessageBox,
     QPushButton,
     QVBoxLayout, 
     QWidget,
-    QMessageBox)
+    QFileDialog)
 
 from function_part import find_card_data, luhn_alg, time_measurement
 
@@ -63,6 +64,12 @@ class MainWindow(QMainWindow):
         """
         Checks the data entered by the user and calls the function to search for the card number by hash.
         """
+        file_path = QFileDialog.getSaveFileName(
+                self,
+                "Выберите файл для сохранения найденного номера:",
+                "",
+                "JSON File(*.json)",
+            )[0]
         bins = self.btn_bins.text().split(",")
         hash_card = self.btn_hash_card.text()
         last_number = self.btn_last_number.text()
@@ -80,12 +87,13 @@ class MainWindow(QMainWindow):
             result = find_card_data(
                 bins,
                 hash_card,
-                last_number
+                last_number,
+                file_path
             )
             if result:
                 self.card_number_label.setText("Номер карты: " + result)
                 self.card_number = result
-                QMessageBox.information(None, "Успешно", "Номер карты найден")
+                QMessageBox.information(None, "Успешно", f"Номер карты найден и успешно сохранен в {file_path}")
             else:
                 QMessageBox.information(None, "Ошибка", "Номер карты не найден")
 
@@ -101,11 +109,11 @@ class MainWindow(QMainWindow):
             result = luhn_alg(self.card_number)
             if result is not False:
                 QMessageBox.information(
-                    None, "Результат проверки", f"Номер карты действителен: {result}"
+                    None, "Результат проверки", "Номер карты действителен."
                 )
             else:
                 QMessageBox.information(
-                    None, "Результат проверки", f"Номер карты недействителен: {result}"
+                    None, "Результат проверки", "Номер карты недействителен."
                 )
 
     def graph_draw(self) -> None:
